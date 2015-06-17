@@ -111,9 +111,27 @@ public class PRListView extends ListView implements OnScrollListener,
 			OnRefreshLoadingMoreListener onRefreshLoadingMoreListener) {
 		this.onRefreshLoadingMoreListener = onRefreshLoadingMoreListener;
 	}
+	/**
+	 * 刷新
+	 */
 	public void setOnRefresh() {
-		mlistViewState = DListViewState.LV_RELEASE_REFRESH;
-		doActionUp();
+		if (isAutoRefresh) {
+			mlistViewState = DListViewState.LV_RELEASE_REFRESH;
+			doActionUp();
+		}
+		
+	}
+	/**
+	 * 加载更多
+	 */
+	public void setOnLoadMore() {
+		if (isAutoMore && !loadingMoreState.equals(DListViewLoadingMore.LV_OVER)) {
+			// 防止重复
+			if (onRefreshLoadingMoreListener != null&& loadingMoreState == DListViewLoadingMore.LV_NORMAL) {
+				updateLoadMoreViewState(DListViewLoadingMore.LV_LOADING);
+				onRefreshLoadingMoreListener.onLoadMore();// 对外提供方法加载更多.
+			}
+		}
 	}
 	/***
 	 * 初始化ListView
